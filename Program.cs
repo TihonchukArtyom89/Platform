@@ -1,4 +1,7 @@
+using Microsoft.Extensions.Options;
+using Platform;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<MessageOptions>(options => { options.CityName = "Albany"; });
 var app = builder.Build();
 //app.Use(async (context, next) => 
 //{
@@ -25,16 +28,17 @@ var app = builder.Build();
 //    }
 //    await next();
 //});
-((IApplicationBuilder)app).Map("/branch", branch =>
-{
-    //branch.UseMiddleware<Platform.QueryStringMiddleware>();
-    //branch.Run(async (context) => 
-    //{
-    //    await context.Response.WriteAsync($"Branch Middleware");
-    //});
-    branch.Run(new Platform.QueryStringMiddleware().Invoke);
-});
-app.UseMiddleware<Platform.QueryStringMiddleware>();
+//((IApplicationBuilder)app).Map("/branch", branch =>
+//{
+//    //branch.UseMiddleware<Platform.QueryStringMiddleware>();
+//    //branch.Run(async (context) => 
+//    //{
+//    //    await context.Response.WriteAsync($"Branch Middleware");
+//    //});
+//    branch.Run(new Platform.QueryStringMiddleware().Invoke);
+//});
+//app.UseMiddleware<Platform.QueryStringMiddleware>();
+app.MapGet("/location", async (HttpContext context, IOptions<MessageOptions> msgOpts) => { Platform.MessageOptions opts = msgOpts.Value; await context.Response.WriteAsync($"{opts.CityName},{opts.CountryName}"); }) ;
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
