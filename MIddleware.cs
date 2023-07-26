@@ -2,11 +2,12 @@
 
 public class QueryStringMiddleware
 {
-    private RequestDelegate next;
+    private RequestDelegate? next;
     public QueryStringMiddleware(RequestDelegate nextDelegate)
     {
         next = nextDelegate;
     }
+    public QueryStringMiddleware() { }
     public async Task Invoke(HttpContext context)
     {
         if ((context.Request.Method == HttpMethods.Get) && (context.Request.Query["custom"] == "true"))
@@ -17,6 +18,9 @@ public class QueryStringMiddleware
             }
             await context.Response.WriteAsync("Class-based Middleware \n");
         }
-        await next(context);
+        if(next!=null) 
+        {
+            await next(context);
+        }
     }
 }
