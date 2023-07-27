@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Options;
+//using Microsoft.Extensions.Options;
 using Platform;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MessageOptions>(options => { options.CityName = "Albany"; });
@@ -38,7 +38,8 @@ var app = builder.Build();
 //    branch.Run(new Platform.QueryStringMiddleware().Invoke);
 //});
 //app.UseMiddleware<Platform.QueryStringMiddleware>();
-app.MapGet("/location", async (HttpContext context, IOptions<MessageOptions> msgOpts) => { Platform.MessageOptions opts = msgOpts.Value; await context.Response.WriteAsync($"{opts.CityName},{opts.CountryName}"); }) ;
+//app.MapGet("/location", async (HttpContext context, IOptions<MessageOptions> msgOpts) => { Platform.MessageOptions opts = msgOpts.Value; await context.Response.WriteAsync($"{opts.CityName},{opts.CountryName}"); }) ;
+app.UseMiddleware<LocationMiddleware>();
 app.MapGet("/", () => "Hello World!");
 
 app.Run();

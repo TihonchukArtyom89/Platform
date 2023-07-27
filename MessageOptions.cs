@@ -1,4 +1,6 @@
-﻿namespace Platform;
+﻿
+
+namespace Platform;
 
 public class MessageOptions
 {
