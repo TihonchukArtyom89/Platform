@@ -45,7 +45,7 @@ var app = builder.Build();
 //app.UseMiddleware<Capital>();
 //app.UseRouting();
 //app.MapGet("{first}/{second}/{third}",async context =>
-app.MapGet("{first:int}/{second:bool}", async context =>
+app.MapGet("{first:alpha:length(3)}/{second:bool}", async context =>
 {
     await context.Response.WriteAsync("Request was routed\n");
     foreach(var kvp in context.Request.RouteValues)
@@ -53,7 +53,7 @@ app.MapGet("{first:int}/{second:bool}", async context =>
         await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
     }
 });
-app.MapGet("capital/{country=France}", Capital.Endpoint);
+app.MapGet("capital/{country:regex(^uk|france|monaco$)}", Capital.Endpoint);
 app.MapGet("size/{city?}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
 //app.UseEndpoints(endpoints => 
 //{
