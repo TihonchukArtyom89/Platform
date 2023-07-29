@@ -53,7 +53,7 @@ app.MapGet("{first}/{second}/{third}",async context =>
     }
 });
 app.MapGet("capital/{country}", Capital.Endpoint);
-app.MapGet("population/{city}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
+app.MapGet("size/{city}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
 //app.UseEndpoints(endpoints => 
 //{
 //    endpoints.MapGet("routing", async context =>
