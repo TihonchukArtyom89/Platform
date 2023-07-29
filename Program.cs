@@ -44,7 +44,8 @@ var app = builder.Build();
 //app.UseMiddleware<Population>();
 //app.UseMiddleware<Capital>();
 //app.UseRouting();
-app.MapGet("{first}/{second}/{third}",async context =>
+//app.MapGet("{first}/{second}/{third}",async context =>
+app.MapGet("files/{filename}.{ext}", async context =>
 {
     await context.Response.WriteAsync("Request was routed\n");
     foreach(var kvp in context.Request.RouteValues)
