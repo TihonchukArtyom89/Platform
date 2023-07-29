@@ -44,9 +44,13 @@ var app = builder.Build();
 //app.UseMiddleware<Population>();
 //app.UseMiddleware<Capital>();
 //app.UseRouting();
-app.MapGet("routing", async context =>
+app.MapGet("{first}/{second}/{third}",async context =>
 {
-    await context.Response.WriteAsync("Request was routed");
+    await context.Response.WriteAsync("Request was routed\n");
+    foreach(var kvp in context.Request.RouteValues)
+    {
+        await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
+    }
 });
 app.MapGet("capital/uk", new Capital().Invoke);
 app.MapGet("population/paris", new Population().Invoke);
