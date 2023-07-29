@@ -41,7 +41,13 @@ var app = builder.Build();
 //app.MapGet("/location", async (HttpContext context, IOptions<MessageOptions> msgOpts) => { Platform.MessageOptions opts = msgOpts.Value; await context.Response.WriteAsync($"{opts.CityName},{opts.CountryName}"); }) ;
 //app.UseMiddleware<LocationMiddleware>();
 //app.MapGet("/", () => "Hello World!");
-app.UseMiddleware<Population>();
-app.UseMiddleware<Capital>();
+//app.UseMiddleware<Population>();
+//app.UseMiddleware<Capital>();
+app.UseRouting();
+app.UseEndpoints(endpoints => {
+    endpoints.MapGet("routing", async context => { await context.Response.WriteAsync("Request was routed");
+    endpoints.MapGet("capital/uk", new Capital().Invoke);
+    endpoints.MapGet("population/paris", new Population().Invoke);
+    }); });
 app.Run(async context => { await context.Response.WriteAsync("Terminal Middleware Reached"); });
 app.Run();

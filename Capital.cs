@@ -30,6 +30,7 @@ public class Capital
             if (capital != null)
             {
                 await context.Response.WriteAsync($"{capital} is the capital of {country}");
+                return;
             }
         }
         if (next != null)
