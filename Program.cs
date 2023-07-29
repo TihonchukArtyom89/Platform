@@ -43,15 +43,21 @@ var app = builder.Build();
 //app.MapGet("/", () => "Hello World!");
 //app.UseMiddleware<Population>();
 //app.UseMiddleware<Capital>();
-app.UseRouting();
-app.UseEndpoints(endpoints => 
+//app.UseRouting();
+app.MapGet("routing", async context =>
 {
-    endpoints.MapGet("routing", async context =>
-    {
-        await context.Response.WriteAsync("Request was routed");
-    });
-    endpoints.MapGet("capital/uk", new Capital().Invoke);
-    endpoints.MapGet("population/paris", new Population().Invoke);
+    await context.Response.WriteAsync("Request was routed");
 });
-app.Run(async (context) => { await context.Response.WriteAsync("Terminal Middleware Reached"); });
+app.MapGet("capital/uk", new Capital().Invoke);
+app.MapGet("population/paris", new Population().Invoke);
+//app.UseEndpoints(endpoints => 
+//{
+//    endpoints.MapGet("routing", async context =>
+//    {
+//        await context.Response.WriteAsync("Request was routed");
+//    });
+//    endpoints.MapGet("capital/uk", new Capital().Invoke);
+//    endpoints.MapGet("population/paris", new Population().Invoke);
+//});
+//app.Run(async (context) => { await context.Response.WriteAsync("Terminal Middleware Reached"); });
 app.Run();
