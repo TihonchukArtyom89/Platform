@@ -45,7 +45,7 @@ var app = builder.Build();
 //app.UseMiddleware<Capital>();
 //app.UseRouting();
 //app.MapGet("{first}/{second}/{third}",async context =>
-app.MapGet("{first}/{second}/{*catchall}", async context =>
+app.MapGet("{first:int}/{second:bool}", async context =>
 {
     await context.Response.WriteAsync("Request was routed\n");
     foreach(var kvp in context.Request.RouteValues)
