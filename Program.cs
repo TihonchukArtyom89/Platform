@@ -55,7 +55,7 @@ app.MapGet("{first:alpha:length(3)}/{second:bool}", async context =>
 });
 app.MapGet("capital/{country:regex(^uk|france|monaco$)}", Capital.Endpoint);
 app.MapGet("size/{city?}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
-app.MapFallback(async context => { await context.Response.WriteAsync("Routed to fallback"); });
+app.MapFallback(async context => { await context.Response.WriteAsync("Routed to fallback endpoint"); });
 //app.UseEndpoints(endpoints => 
 //{
 //    endpoints.MapGet("routing", async context =>
