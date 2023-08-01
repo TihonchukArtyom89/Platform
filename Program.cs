@@ -1,3 +1,65 @@
+
+using Platform;
+using Platform.Services;
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+app.UseMiddleware<WeatherMiddleware>();
+IResponseFormatter formatter = new TextResponseFormatter();
+app.MapGet("middleware/function",async (context) => { await formatter.Format(context, "Middleware Functon: It is snowing in  Chicago"); } );
+app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+app.MapGet("endpoint/function", async (context) => { await context.Response.WriteAsync("Endpoint Functon: It is sunny in  LA"); });
+app.Run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//Chapter 12-13
 //using Microsoft.Extensions.Options;
 using Platform;
 var builder = WebApplication.CreateBuilder(args);
@@ -85,3 +147,4 @@ app.MapFallback(async context => { await context.Response.WriteAsync("Routed to 
 //});
 //app.Run(async (context) => { await context.Response.WriteAsync("Terminal Middleware Reached"); });
 app.Run();
+*/
