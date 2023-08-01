@@ -4,16 +4,8 @@ namespace Platform;
 
 public class WeatherEndpoint
 {
-    public static async Task Endpoint(HttpContext context)
+    public static async Task Endpoint(HttpContext context, IResponseFormatter formatter)
     {
-        IResponseFormatter? formatter = context.RequestServices.GetService<IResponseFormatter>();
-        if (formatter == null) 
-        { 
-            await context.Response.WriteAsync($"No service for {typeof(WeatherEndpoint)} found"); 
-        }
-        else
-        {
-            await formatter.Format(context, "Endpoint Class: It is cloudly in Milan");
-        }
+        await formatter.Format(context, "Endpoint Class: It is cloudly in Milan");
     }
 }

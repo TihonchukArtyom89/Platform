@@ -7,7 +7,8 @@ var app = builder.Build();
 app.UseMiddleware<WeatherMiddleware>();
 //IResponseFormatter formatter = new TextResponseFormatter();
 app.MapGet("middleware/function",async (HttpContext context,IResponseFormatter formatter) => { await formatter.Format(context, "Middleware Functon: It is snowing in  Chicago"); } );
-app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+//app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+app.MapWeather("endpoint/class");
 app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) => { await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
 app.Run();
 
