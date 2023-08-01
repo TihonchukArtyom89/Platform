@@ -13,8 +13,7 @@
                     <body>
                         <h2>Formatted Response</h2>
                         <span>{content}</span>
-                    </body>");
-                       
+                    </body>");                       
         }
     }
 }
