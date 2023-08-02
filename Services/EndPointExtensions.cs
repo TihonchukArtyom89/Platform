@@ -13,6 +13,11 @@ public static class EndPointExtensions
         T endpointInstance = ActivatorUtilities.CreateInstance<T>(app.ServiceProvider);
         //app.MapGet(path,(RequestDelegate)methodInfo.CreateDelegate(typeof(RequestDelegate),endpointInstance));
         ParameterInfo[] methodParams = methodInfo!.GetParameters();
-        app.MapGet(path,context => (Task)(methodInfo.Invoke(endpointInstance,methodParams.Select(p=>p.ParameterType==typeof(HttpContext) ? context : context.RequestServices.GetService(p.ParameterType)).ToArray()))!);
+        //app.MapGet(path,context => (Task)(methodInfo.Invoke(endpointInstance,methodParams.Select(p=>p.ParameterType==typeof(HttpContext) ? context : context.RequestServices.GetService(p.ParameterType)).ToArray()))!);
+        app.MapGet(path,context => 
+        {
+            T endpointInstance = ActivatorUtilities.CreateInstance<T>(context.RequestServices);
+            return (Task)methodInfo.Invoke(endpointInstance!, methodParams.Select(p => p.ParameterType == typeof(HttpContext) ? context : context.RequestServices.GetService(p.ParameterType)).ToArray())!;
+        });
     }
 }
