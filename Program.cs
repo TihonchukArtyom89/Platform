@@ -2,6 +2,16 @@
 using Platform;
 using Platform.Services;
 var builder = WebApplication.CreateBuilder(args);
+IWebHostEnvironment env = builder.Environment;
+if(env.IsDevelopment())
+{
+    builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+    builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
+}
+else
+{
+    builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+}
 //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
 builder.Services.AddScoped<ITimeStamper,DefaultTimeStamper>();
