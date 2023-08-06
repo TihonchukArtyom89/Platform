@@ -2,18 +2,24 @@
 using Platform;
 using Platform.Services;
 var builder = WebApplication.CreateBuilder(args);
-IWebHostEnvironment env = builder.Environment;
-if(env.IsDevelopment())
-{
-    builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
-    builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
-}
-else
-{
-    builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
-}
+//IWebHostEnvironment env = builder.Environment;
+//if(env.IsDevelopment())
+//{
+//    builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+//    builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
+//}
+//else
+//{
+//    builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+//}
 //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
-builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+IConfiguration config = builder.Configuration;
+builder.Services.AddScoped<IResponseFormatter>(serviceProvider => 
+{
+    string? typeName = config["services:IResponseFormatter"];
+    return (IResponseFormatter)ActivatorUtilities.CreateInstance(serviceProvider, typeName == null ? typeof(GuidService) : Type.GetType(typeName, true)!);
+});
+//builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
 builder.Services.AddScoped<ITimeStamper,DefaultTimeStamper>();
 var app = builder.Build();
 app.UseMiddleware<WeatherMiddleware>();
