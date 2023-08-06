@@ -1,5 +1,5 @@
 
-using Platform;
+//using Platform;
 using Platform.Services;
 var builder = WebApplication.CreateBuilder(args);
 //IWebHostEnvironment env = builder.Environment;
@@ -13,23 +13,35 @@ var builder = WebApplication.CreateBuilder(args);
 //    builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 //}
 //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
-IConfiguration config = builder.Configuration;
-builder.Services.AddScoped<IResponseFormatter>(serviceProvider => 
-{
-    string? typeName = config["services:IResponseFormatter"];
-    return (IResponseFormatter)ActivatorUtilities.CreateInstance(serviceProvider, typeName == null ? typeof(GuidService) : Type.GetType(typeName, true)!);
-});
-//builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
-builder.Services.AddScoped<ITimeStamper,DefaultTimeStamper>();
+//IConfiguration config = builder.Configuration;
+//builder.Services.AddScoped<IResponseFormatter>(serviceProvider => 
+//{
+//    string? typeName = config["services:IResponseFormatter"];
+//    return (IResponseFormatter)ActivatorUtilities.CreateInstance(serviceProvider, typeName == null ? typeof(GuidService) : Type.GetType(typeName, true)!);
+//});
+builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
+builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+builder.Services.AddScoped<IResponseFormatter, GuidService>();
+//builder.Services.AddScoped<ITimeStamper,DefaultTimeStamper>();
 var app = builder.Build();
-app.UseMiddleware<WeatherMiddleware>();
+app.MapGet("single", async context =>
+{
+    IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
+    await formatter.Format(context, "Single service");
+});
+app.MapGet("/", async context =>
+{
+    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().First(f => f.RichOutput);
+    await formatter.Format(context, "Multiple service");
+});
+//app.UseMiddleware<WeatherMiddleware>();
 //IResponseFormatter formatter = new TextResponseFormatter();
-app.MapGet("middleware/function",async (HttpContext context,IResponseFormatter formatter) => { await formatter.Format(context, "Middleware Functon: It is snowing in  Chicago"); } );
+//app.MapGet("middleware/function",async (HttpContext context,IResponseFormatter formatter) => { await formatter.Format(context, "Middleware Functon: It is snowing in  Chicago"); } );
 //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 //app.MapWeather("endpoint/class");
-app.MapEndpoint<WeatherEndpoint>("endpoint/class");
+//app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 //app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) => { await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
-app.MapGet("endpoint/function", async (HttpContext context) => { IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>(); await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
+//app.MapGet("endpoint/function", async (HttpContext context) => { IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>(); await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
 app.Run();
 
 

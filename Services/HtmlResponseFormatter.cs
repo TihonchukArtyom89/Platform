@@ -15,5 +15,6 @@
                         <span>{content}</span>
                     </body>");                       
         }
+        public bool RichOutput => true;
     }
 }
