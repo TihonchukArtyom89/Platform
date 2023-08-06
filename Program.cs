@@ -1,7 +1,8 @@
 
 //using Platform;
-using Platform.Services;
+//using Platform.Services;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
 //IWebHostEnvironment env = builder.Environment;
 //if(env.IsDevelopment())
 //{
@@ -19,21 +20,39 @@ var builder = WebApplication.CreateBuilder(args);
 //    string? typeName = config["services:IResponseFormatter"];
 //    return (IResponseFormatter)ActivatorUtilities.CreateInstance(serviceProvider, typeName == null ? typeof(GuidService) : Type.GetType(typeName, true)!);
 //});
-builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
-builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
-builder.Services.AddScoped<IResponseFormatter, GuidService>();
+//builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
+//builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+//builder.Services.AddScoped<IResponseFormatter, GuidService>();
 //builder.Services.AddScoped<ITimeStamper,DefaultTimeStamper>();
 var app = builder.Build();
-app.MapGet("single", async context =>
+app.MapGet("string", async context =>
 {
-    IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
-    await formatter.Format(context, "Single service");
+    ICollection<string> collection = context.RequestServices.GetRequiredService<ICollection<string>>();
+    collection.Add($"Request: {DateTime.Now.ToLongTimeString()}");
+    foreach (string str in collection)
+    {
+        await context.Response.WriteAsync($"String: {str}\n");
+    }
 });
-app.MapGet("/", async context =>
+app.MapGet("int", async context =>
 {
-    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().First(f => f.RichOutput);
-    await formatter.Format(context, "Multiple service");
+    ICollection<int> collection = context.RequestServices.GetRequiredService<ICollection<int>>();
+    collection.Add(collection.Count + 1);
+    foreach (int val in collection)
+    {
+        await context.Response.WriteAsync($"Intðôòïó: {val}\n");
+    }
 });
+//app.MapGet("single", async context =>
+//{
+//    IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
+//    await formatter.Format(context, "Single service");
+//});
+//app.MapGet("/", async context =>
+//{
+//    IResponseFormatter formatter = context.RequestServices.GetServices<IResponseFormatter>().First(f => f.RichOutput);
+//    await formatter.Format(context, "Multiple service");
+//});
 //app.UseMiddleware<WeatherMiddleware>();
 //IResponseFormatter formatter = new TextResponseFormatter();
 //app.MapGet("middleware/function",async (HttpContext context,IResponseFormatter formatter) => { await formatter.Format(context, "Middleware Functon: It is snowing in  Chicago"); } );
