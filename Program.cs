@@ -1,4 +1,68 @@
 
+using Microsoft.AspNetCore.Http;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+app.MapGet("config", async (HttpContext context, IConfiguration config) => 
+{
+    string defaultDebug = config["Logging:LogLevel:Default"];
+    await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
+});
+app.MapGet("/", async context => 
+{
+    await context.Response.WriteAsync("Hello World");
+});
+app.Run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//chapter 14 
+
 //using Platform;
 //using Platform.Services;
 var builder = WebApplication.CreateBuilder(args);
@@ -61,54 +125,7 @@ app.MapGet("int", async context =>
 //app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 //app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) => { await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
 //app.MapGet("endpoint/function", async (HttpContext context) => { IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>(); await formatter.Format(context, "Endpoint Functon: It is sunny in  LA"); });
-app.Run();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.Run();*/
 
 /*
 //Chapter 12-13
