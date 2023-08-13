@@ -6,15 +6,17 @@ using Platform;
 var builder = WebApplication.CreateBuilder(args);
 var servicesConfig = builder.Configuration;// - use configuration services to services
 builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
-
+var servicesEnv = builder.Environment;// - use environment tp set up services 
 var app = builder.Build();
 var pipelineConfig = app.Configuration;// - use configuration services to pipeline
+var pipelineEnv = app.Environment;// - use environment tp set up pipeline  
+
 app.UseMiddleware<LocationMiddleware>();
-app.MapGet("config", async (HttpContext context, IConfiguration config) => 
+app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) => 
 {
     string defaultDebug = config["Logging:LogLevel:Default"];
     string environ = config["ASPNETCORE_ENVIRONMENT"];
-    await context.Response.WriteAsync($"The config setting is: {defaultDebug}\nThe env setting is: {environ}");
+    await context.Response.WriteAsync($"The config setting is: {defaultDebug}\nThe env setting from configuration settings is: {environ}\nThe env from parameter of middleware component or endpoint is: {env.EnvironmentName}");
 });
 app.MapGet("/", async context => 
 {
