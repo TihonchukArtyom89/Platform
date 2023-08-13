@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
+var servicesConfig = builder.Configuration;// - use configuration services to services
 
 var app = builder.Build();
+var pipelineConfig = app.Configuration;// - use configuration services to pipeline
 app.MapGet("config", async (HttpContext context, IConfiguration config) => 
 {
     string defaultDebug = config["Logging:LogLevel:Default"];
