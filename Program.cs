@@ -1,11 +1,15 @@
 
-using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Http;
+
+using Platform;
 
 var builder = WebApplication.CreateBuilder(args);
 var servicesConfig = builder.Configuration;// - use configuration services to services
+builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
 
 var app = builder.Build();
 var pipelineConfig = app.Configuration;// - use configuration services to pipeline
+app.UseMiddleware<LocationMiddleware>();
 app.MapGet("config", async (HttpContext context, IConfiguration config) => 
 {
     string defaultDebug = config["Logging:LogLevel:Default"];
