@@ -17,6 +17,9 @@ app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHost
     string defaultDebug = config["Logging:LogLevel:Default"];
     string environ = config["ASPNETCORE_ENVIRONMENT"];
     await context.Response.WriteAsync($"The config setting is: {defaultDebug}\nThe env setting from configuration settings is: {environ}\nThe env from parameter of middleware component or endpoint is: {env.EnvironmentName}");
+    string wsID = config["WebService:ID"];
+    string wsKey = config["WebService:Key"];
+    await context.Response.WriteAsync($"\nThe secret ID is: {wsID}\nThe secret Key is: {wsKey}");
 });
 app.MapGet("/", async context => 
 {
