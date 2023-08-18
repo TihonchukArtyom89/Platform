@@ -1,27 +1,12 @@
-
-//using Microsoft.AspNetCore.Http;
-
+ 
 using Platform;
 
 var builder = WebApplication.CreateBuilder(args);
-var servicesConfig = builder.Configuration;// - use configuration services to services
-builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
-var servicesEnv = builder.Environment;// - use environment tp set up services 
-var app = builder.Build();
-var pipelineConfig = app.Configuration;// - use configuration services to pipeline
-var pipelineEnv = app.Environment;// - use environment tp set up pipeline  
 
-app.UseMiddleware<LocationMiddleware>();
-app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) => 
-{
-    string defaultDebug = config["Logging:LogLevel:Default"];
-    string environ = config["ASPNETCORE_ENVIRONMENT"];
-    await context.Response.WriteAsync($"The config setting is: {defaultDebug}\nThe env setting from configuration settings is: {environ}\nThe env from parameter of middleware component or endpoint is: {env.EnvironmentName}");
-    string wsID = config["WebService:ID"];
-    string wsKey = config["WebService:Key"];
-    await context.Response.WriteAsync($"\nThe secret ID is: {wsID}\nThe secret Key is: {wsKey}");
-});
-app.MapGet("/", async context => 
+var app = builder.Build();
+
+app.MapGet("population/{city?}", Population.Endpoint);
+app.MapGet("/", async context =>
 {
     await context.Response.WriteAsync("Hello World");
 });
@@ -70,7 +55,36 @@ app.Run();
 
 
 
+/*
+chapter 15 - using configuration services
+//using Microsoft.AspNetCore.Http;
 
+using Platform;
+
+var builder = WebApplication.CreateBuilder(args);
+var servicesConfig = builder.Configuration;// - use configuration services to services
+builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
+var servicesEnv = builder.Environment;// - use environment tp set up services 
+var app = builder.Build();
+var pipelineConfig = app.Configuration;// - use configuration services to pipeline
+var pipelineEnv = app.Environment;// - use environment tp set up pipeline  
+
+app.UseMiddleware<LocationMiddleware>();
+app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) => 
+{
+    string defaultDebug = config["Logging:LogLevel:Default"];
+    string environ = config["ASPNETCORE_ENVIRONMENT"];
+    await context.Response.WriteAsync($"The config setting is: {defaultDebug}\nThe env setting from configuration settings is: {environ}\nThe env from parameter of middleware component or endpoint is: {env.EnvironmentName}");
+    string wsID = config["WebService:ID"];
+    string wsKey = config["WebService:Key"];
+    await context.Response.WriteAsync($"\nThe secret ID is: {wsID}\nThe secret Key is: {wsKey}");
+});
+app.MapGet("/", async context => 
+{
+    await context.Response.WriteAsync("Hello World");
+});
+app.Run();
+*/
 
 /*
 //chapter 14 
