@@ -4,12 +4,13 @@ using Platform;
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
-
+app.Logger.LogDebug("Pipeline configuration starting");
 app.MapGet("population/{city?}", Population.Endpoint);
 app.MapGet("/", async context =>
 {
     await context.Response.WriteAsync("Hello World");
 });
+app.Logger.LogDebug("Pipeline configuration complete");
 app.Run();
 
 

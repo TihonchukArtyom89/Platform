@@ -5,7 +5,7 @@ public class Population
     {
         logger.LogDebug($"Started processing for {context.Request.Path}");
         int? pop = null;
-        string? city = context.Request.RouteValues["city"] as string ?? "london";
+        string city = context.Request.RouteValues["city"] as string ?? "london";
         switch (city.ToLower())
         {
             case "london":
