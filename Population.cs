@@ -1,7 +1,7 @@
 ﻿namespace Platform;
 public class Population
 {
-    public static async Task Endpoint(HttpContext context,ILogger<Population> logger)
+    public static async Task Endpoint(HttpContext context, ILogger<Population> logger)
     {
         logger.LogDebug($"Started processing for {context.Request.Path}");
         int? pop = null;
@@ -21,7 +21,7 @@ public class Population
         if (pop.HasValue)
         {
             await context.Response.WriteAsync($"City: {city}, Population: {pop}");
-            return;
+            //return;
         }
         else
         {
