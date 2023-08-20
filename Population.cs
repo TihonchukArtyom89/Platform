@@ -1,9 +1,10 @@
 ﻿namespace Platform;
-public class Population
+public partial class Population
 {
     public static async Task Endpoint(HttpContext context, ILogger<Population> logger)
     {
-        logger.LogDebug($"Started processing for {context.Request.Path}");
+        //logger.LogDebug($"Started processing for {context.Request.Path}");
+        StartingResponse(logger,context.Request.Path);
         int? pop = null;
         string city = context.Request.RouteValues["city"] as string ?? "london";
         switch (city.ToLower())
@@ -29,6 +30,8 @@ public class Population
         }
         logger.LogDebug($"Finished processing for {context.Request.Path}");
     }
+    [LoggerMessage(0, LogLevel.Debug, "Starting response for {path}")]
+    public static partial void StartingResponse(ILogger logger, string path);
 }
 //public class Population
 //{
