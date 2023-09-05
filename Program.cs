@@ -1,9 +1,9 @@
-
+//chapter 16 session data,https
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts => { opts.IdleTimeout = TimeSpan.FromMinutes(30); opts.Cookie.IsEssential = true; });
 var app = builder.Build();
-app.UseCookiePolicy();
+app.UseHttpsRedirection();
 app.UseSession();
 app.UseMiddleware<Platform.ConsentMiddleware>();
 app.MapGet("/session",async context => 
@@ -15,15 +15,12 @@ app.MapGet("/session",async context =>
     await context.Session.CommitAsync();
     await context.Response.WriteAsync($"Counter 1: {counter1}, Counter 2: {counter2},");
 });
-//app.MapFallback(async context =>
-//{
-//    await context.Response.WriteAsync($"HTTPS Request: {context.Request.IsHttps}\n");
-//    await context.Response.WriteAsync("Hello World!");
-//});
-app.MapFallback(async context => {
-    await context.Response.WriteAsync($"HTTPS Request: {context.Request.IsHttps} \n");
+app.MapFallback(async context =>
+{
+    await context.Response.WriteAsync($"HTTPS Request: {context.Request.IsHttps}\n");
     await context.Response.WriteAsync("Hello World!");
 });
+
 app.Run();
 
 
