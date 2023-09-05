@@ -4,8 +4,17 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts => { opts.IdleTimeout = TimeSpan.FromMinutes(30); opts.Cookie.IsEssential = true; });
 var app = builder.Build();
 app.UseCookiePolicy();
-app.UseMiddleware<Platform.ConsentMiddleware>();
 app.UseSession();
+app.UseMiddleware<Platform.ConsentMiddleware>();
+app.MapGet("/session",async context => 
+{
+    int counter1 = (context.Session.GetInt32("counter1") ?? 0) + 1;
+    int counter2 = (context.Session.GetInt32("counter2") ?? 0) + 1;
+    context.Session.SetInt32("counter1", counter1);
+    context.Session.SetInt32("counter2", counter2);
+    await context.Session.CommitAsync();
+    await context.Response.WriteAsync($"Counter 1: {counter1}, Counter 2: {counter2},");
+});
 app.MapFallback(async context => await context.Response.WriteAsync("Hello World!"));
 
 app.Run();
