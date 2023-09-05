@@ -1,4 +1,46 @@
-//chapter 16 session data,https
+//chapter 16 handling exceptions and errors
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+
+app.Run(context => { throw new Exception("Something gone wrong"); });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//chapter 16 session data,https,hsts
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts => { opts.IdleTimeout = TimeSpan.FromMinutes(30); opts.Cookie.IsEssential = true; });
@@ -27,42 +69,7 @@ app.MapFallback(async context =>
 });
 
 app.Run();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 /*
