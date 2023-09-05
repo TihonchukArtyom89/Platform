@@ -2,7 +2,12 @@
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts => { opts.IdleTimeout = TimeSpan.FromMinutes(30); opts.Cookie.IsEssential = true; });
+builder.Services.AddHsts(opts => { opts.MaxAge = TimeSpan.FromDays(1); opts.IncludeSubDomains = true;});
 var app = builder.Build();
+if(app.Environment.IsProduction())
+{
+    app.UseHsts();
+}
 app.UseHttpsRedirection();
 app.UseSession();
 app.UseMiddleware<Platform.ConsentMiddleware>();
