@@ -1,5 +1,7 @@
-//chapter 17 caching data, persistent cache with db
+//chapter 17 caching data, persistent cache with db, entityframework core
 using Platform.Services;
+using Platform.Models;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddDistributedMemoryCache(opts => { opts.SizeLimit = 200; });
 builder.Services.AddDistributedSqlServerCache(opts =>
@@ -10,12 +12,22 @@ builder.Services.AddDistributedSqlServerCache(opts =>
 });
 builder.Services.AddResponseCaching();
 builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+builder.Services.AddDbContext<CalculationContext>(opts => { opts.UseSqlServer(builder.Configuration["ConnectionStrings:CalcConnection"]); });
+builder.Services.AddTransient<SeedData>();
 var app = builder.Build();
 app.UseResponseCaching();
 app.MapEndpoint<Platform.SumEndpoint>("/sum/{count:int=1000000000}");
 app.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-
-app.Run();
+bool cmdLineInit = (app.Configuration["INITDB"] ?? "false") == "true";
+if(app.Environment.IsDevelopment() || cmdLineInit)
+{
+    var seedData = app.Services.GetRequiredService<SeedData>();
+    seedData.SeedDatabase();
+}
+if(!cmdLineInit)
+{
+    app.Run();
+}
 
 
 
